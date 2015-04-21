@@ -3,14 +3,23 @@ public class Hand {
 	private int[] value;
 	private String result;
 	
+	private Deck deck;
+	
 	Hand(Deck d)
 	{
 		value = new int[6];
 		cards = new Card[5];
+		deck = d;
 		for (int x=0; x<5; x++)
 		{
-			cards[x] = d.drawFromDeck();
+			cards[x] = deck.drawFromDeck();
 		}
+		evalCards();
+
+	}
+   
+	public void evalCards()
+	{
 
 		int[] ranks = new int[14];
 		int[] orderedRanks = new int[5];	 //miscellaneous cards that are not otherwise significant
@@ -35,7 +44,7 @@ public class Hand {
 
 
 		 
-		for (int x=13; x>=1; x--) //x is rank of cards, ranks[x] is number of cards of that rank
+		for (int x=13; x>=0; x--) //x is rank of cards, ranks[x] is number of cards of that rank
 				{
 						 if (ranks[x] > sameCards)
 						 {
@@ -173,10 +182,8 @@ public class Hand {
 			value[1]=topStraightValue;
 		}
 
-
 	}
-   
-
+	
 	void display()
 	{
 		String s;
@@ -249,9 +256,14 @@ public class Hand {
 	
 	String getResult(){return result;}
 	
-	public void changeHelds()
+	public void changeACard(int i)
 	{
-		
+		cards[i] = deck.drawFromDeck();
+	}
+	
+	public void resetDeck()
+	{
+		deck.resetCards();
 	}
 }
 

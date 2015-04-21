@@ -61,6 +61,7 @@ public class WindowGUI {
 	public WindowGUI() {
 		initialize();
 		handleButtons();
+		poker = new Poker();
 		
 	}
 
@@ -205,43 +206,35 @@ public class WindowGUI {
 		//BUTTONS
 		deal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(gameStatus == Status.dealing)
-					getHand();
-				else if(gameStatus == Status.helding)
-					handleHelding();
+				dealButton();
 			}
 		});
 		
 	}
 	
-	private void notDealt()
+	
+	private void dealButton()
 	{
-		for(int i = 0;i<cardImages.length;i++)
+		if( poker.isDealing())
+			poker.dealCards();
+		else{
+			poker.getResult();
+			resetHeldCards();
+		}
+			
+		
+		
+		String[] imgString = poker.getCardsLocations();
+		
+		for(int i = 0;i<imgString.length;i++)
 	  	{
-	  		//cardImages[i].setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
-	  		heldLabels[i].setForeground(SystemColor.inactiveCaption);
-	  		heldCards[i] = false;
+	  		cardImages[i].setIcon(new ImageIcon(WindowGUI.class.getResource(imgString[i])));
 	  	}
+	  	resultLabel.setText(poker.getResultString());
 	}
 	
-	private void getHand()
-	{
-		
-		  	 deck= new Deck();
-		  	hand= new Hand(deck);
-		  	 hand.display(); //show the summary of the hand, e.g. "full house"
-		  	 hand.displayAll(); //look at all the individual cards in the hand		 
-		  	 
-		String[] imgString =hand.getHandImages();
-		  	 
-		  	for(int i = 0;i<imgString.length;i++)
-		  	{
-		  		cardImages[i].setIcon(new ImageIcon(WindowGUI.class.getResource(imgString[i])));
-		  	}
-		  	resultLabel.setText(hand.getResult());
-		 
-		  	gameStatus = Status.helding;
-	}
+
+
 	
 	private void handleHelding()
 	{
@@ -253,7 +246,7 @@ public class WindowGUI {
 				
 			}
 	  	}
-		gameStatus = Status.dealing;
+		
 	}
 	
 	//VERY INEFFICENT CODE
@@ -263,43 +256,50 @@ public class WindowGUI {
 		int i = 0;
 		cardImages[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				heldCards[0] = !heldCards[0];
-				if(heldCards[0])heldLabels[0].setForeground(Color.BLACK);
+				poker.toogleHeldCard(0);
+				if(poker.getHeldCard(0))heldLabels[0].setForeground(Color.BLACK);
 				else heldLabels[0].setForeground(SystemColor.inactiveCaption);
 			}
 		});
 		
 		cardImages[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				heldCards[1] = !heldCards[1];
-				if(heldCards[1])heldLabels[1].setForeground(Color.BLACK);
+				poker.toogleHeldCard(1);
+				if(poker.getHeldCard(1))heldLabels[1].setForeground(Color.BLACK);
 				else heldLabels[1].setForeground(SystemColor.inactiveCaption);
 			}
 		});
 		
 		cardImages[2].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				heldCards[2] = !heldCards[2];
-				if(heldCards[2])heldLabels[2].setForeground(Color.BLACK);
+				poker.toogleHeldCard(2);
+				if(poker.getHeldCard(2))heldLabels[2].setForeground(Color.BLACK);
 				else heldLabels[2].setForeground(SystemColor.inactiveCaption);
 			}
 		});
 		
 		cardImages[3].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				heldCards[3] = !heldCards[3];
-				if(heldCards[3])heldLabels[3].setForeground(Color.BLACK);
+				poker.toogleHeldCard(3);
+				if(poker.getHeldCard(3))heldLabels[3].setForeground(Color.BLACK);
 				else heldLabels[3].setForeground(SystemColor.inactiveCaption);
 			}
 		});
 		
 		cardImages[4].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				heldCards[4] = !heldCards[4];
-				if(heldCards[4])heldLabels[4].setForeground(Color.BLACK);
+				poker.toogleHeldCard(4);
+				if(poker.getHeldCard(4))heldLabels[4].setForeground(Color.BLACK);
 				else heldLabels[4].setForeground(SystemColor.inactiveCaption);
 			}
 		});
 		
+	}
+	
+	private void resetHeldCards()
+	{
+		poker.initHeldCards();
+		for(int i = 0;i<heldCards.length;i++)
+			heldLabels[i].setForeground(SystemColor.inactiveCaption);
 	}
 }
