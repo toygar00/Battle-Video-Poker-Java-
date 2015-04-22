@@ -22,6 +22,8 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.util.Arrays;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 public class WindowGUI {
@@ -31,10 +33,10 @@ public class WindowGUI {
 	JLabel heldLabels[] = new JLabel[5];
 	
 	
-	JButton deal;
 	static JFrame frmVideoPoker;
 	private JTextField textField;
-	private JLabel resultLabel;
+	private JLabel resultLabel, betAmountLabel, winAmountLabel, currentCashLabel;
+	private JButton increaseBet, decreaseBet, betMaxButton, deal;
 	
 	private enum Status { dealing, helding };
 	private Status gameStatus = Status.dealing;
@@ -43,6 +45,7 @@ public class WindowGUI {
   	Hand hand;
   	
   	private Poker poker;
+  	private JTable table;
 
   	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -79,7 +82,7 @@ public class WindowGUI {
 		frmVideoPoker = new JFrame();
 		frmVideoPoker.setTitle("Video Poker");
 		frmVideoPoker.setBackground(Color.BLACK);
-		frmVideoPoker.getContentPane().setBackground(SystemColor.activeCaption);
+		frmVideoPoker.getContentPane().setBackground(new Color(105, 105, 105));
 		frmVideoPoker.getContentPane().setForeground(Color.WHITE);
 		frmVideoPoker.setBounds(100, 100, 514, 500);
 		frmVideoPoker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,48 +90,48 @@ public class WindowGUI {
 		
 		Arrays.fill(heldCards, Boolean.FALSE);
 		
-		JButton deal = new JButton("DEAL");
+		deal = new JButton("DEAL");
 		deal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		deal.setBounds(391, 416, 90, 35);
 		frmVideoPoker.getContentPane().add(deal);
 		
-		JLabel rules = new JLabel("RULES");
-		rules.setVerticalAlignment(SwingConstants.TOP);
-		rules.setBounds(10, 11, 471, 175);
-		frmVideoPoker.getContentPane().add(rules);
-		
-		JButton betMaxButton = new JButton("Bet Max");
+		betMaxButton = new JButton("Bet Max");
 		betMaxButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		betMaxButton.setBounds(291, 416, 90, 35);
+		betMaxButton.setBounds(219, 416, 90, 35);
 		frmVideoPoker.getContentPane().add(betMaxButton);
 		
-		JLabel currentCash = new JLabel("500 Credits");
-		currentCash.setHorizontalAlignment(SwingConstants.RIGHT);
-		currentCash.setBounds(291, 369, 190, 36);
-		currentCash.setFont(new Font("Tahoma", Font.BOLD, 16));
-		frmVideoPoker.getContentPane().add(currentCash);
+		currentCashLabel = new JLabel("500 $");
+		currentCashLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		currentCashLabel.setBounds(291, 369, 190, 36);
+		currentCashLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		frmVideoPoker.getContentPane().add(currentCashLabel);
 		
 		JButton card1 = new JButton("");
+		card1.setBackground(new Color(128, 128, 128));
 		card1.setBounds(31, 253, 80, 105);
 		card1.setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
 		frmVideoPoker.getContentPane().add(card1);
 		
 		JButton card2 = new JButton("");
+		card2.setBackground(new Color(128, 128, 128));
 		card2.setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
 		card2.setBounds(117, 253, 80, 105);
 		frmVideoPoker.getContentPane().add(card2);
 		
 		JButton card3 = new JButton("");
+		card3.setBackground(new Color(128, 128, 128));
 		card3.setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
 		card3.setBounds(207, 253, 80, 105);
 		frmVideoPoker.getContentPane().add(card3);
 		
 		JButton card4 = new JButton("");
+		card4.setBackground(new Color(128, 128, 128));
 		card4.setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
 		card4.setBounds(293, 253, 80, 105);
 		frmVideoPoker.getContentPane().add(card4);
 		
 		JButton card5 = new JButton("");
+		card5.setBackground(new Color(128, 128, 128));
 		card5.setIcon(new ImageIcon(WindowGUI.class.getResource("/cards/BlueBack.png")));
 		card5.setBounds(376, 253, 80, 105);
 		frmVideoPoker.getContentPane().add(card5);
@@ -173,35 +176,54 @@ public class WindowGUI {
 		held5.setBounds(376, 219, 80, 23);
 		frmVideoPoker.getContentPane().add(held5);
 	
-		JButton betOneButton = new JButton("Bet 1");
-		betOneButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		betOneButton.setBounds(191, 416, 90, 35);
-		frmVideoPoker.getContentPane().add(betOneButton);
+		decreaseBet = new JButton("-");
+		decreaseBet.setFont(new Font("Tahoma", Font.BOLD, 12));
+		decreaseBet.setBounds(10, 416, 45, 35);
+		frmVideoPoker.getContentPane().add(decreaseBet);
+		betAmountLabel = new JLabel("Bet 1");
 		
-		JButton coinTypeButton = new JButton("25 Cent");
-		coinTypeButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		coinTypeButton.setBounds(191, 371, 90, 35);
-		frmVideoPoker.getContentPane().add(coinTypeButton);
-		JLabel betAmountLabel = new JLabel("Bet 1");
-		
-		betAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		betAmountLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		betAmountLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		betAmountLabel.setBounds(127, 369, 54, 36);
+		betAmountLabel.setBounds(59, 414, 100, 36);
 		frmVideoPoker.getContentPane().add(betAmountLabel);
-		JLabel winAmountLabel = new JLabel("Win 125");
+		winAmountLabel = new JLabel("Win: 0");
 		
 		winAmountLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		winAmountLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		winAmountLabel.setBounds(10, 369, 101, 36);
 		frmVideoPoker.getContentPane().add(winAmountLabel);
 		
-		JButton helpButton = new JButton("HELP");
-		helpButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		helpButton.setBounds(10, 416, 90, 35);
-		frmVideoPoker.getContentPane().add(helpButton);
-		
 		cardImages[0] = card1;cardImages[1] = card2;cardImages[2] = card3;cardImages[3] = card4;cardImages[4] = card5;
 		heldLabels[0] = held1;heldLabels[1] = held2;heldLabels[2] = held3;heldLabels[3] = held4;heldLabels[4] = held5;
+		
+		increaseBet = new JButton("+");
+		increaseBet.setFont(new Font("Tahoma", Font.BOLD, 12));
+		increaseBet.setBounds(164, 416, 45, 35);
+		frmVideoPoker.getContentPane().add(increaseBet);
+		
+		table = new JTable();
+		table.setBackground(new Color(211, 211, 211));
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Royal Flush", "250"},
+				{"Straight Flush", "50"},
+				{"4 of a Kind", "25"},
+				{"Full House", "9"},
+				{"Flush", "6"},
+				{"Straight", "4"},
+				{"3 of a Kind", "3"},
+				{"Two Pair", "2"},
+				{"Jacks or Better", "1"},
+			},
+			new String[] {
+				"Card", "Multiplier"
+			}
+		));
+		
+		
+		
+		table.setBounds(10, 11, 478, 144);
+		frmVideoPoker.getContentPane().add(table);
 		
 		//BUTTONS
 		deal.addActionListener(new ActionListener() {
@@ -215,11 +237,26 @@ public class WindowGUI {
 	
 	private void dealButton()
 	{
-		if( poker.isDealing())
+	
+		if( poker.isDealing()){
+			resetHeldCards();
 			poker.dealCards();
+			winAmountLabel.setText("Win: 0");
+			currentCashLabel.setText(poker.getCredits() + " $");
+			deal.setText("DRAW");
+			decreaseBet.setEnabled(false);
+			increaseBet.setEnabled(false);
+			betMaxButton.setEnabled(false);
+		}
 		else{
 			poker.getResult();
+			winAmountLabel.setText("Win: " + poker.getWinAmount());
+			currentCashLabel.setText(poker.getCredits() + " $");
 			resetHeldCards();
+			deal.setText("DEAL");
+			decreaseBet.setEnabled(true);
+			increaseBet.setEnabled(true);
+			betMaxButton.setEnabled(true);
 		}
 			
 		
@@ -294,6 +331,30 @@ public class WindowGUI {
 			}
 		});
 		
+		decreaseBet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				poker.addToBet(-1);
+				betAmountLabel.setText("Bet " + poker.getBetAmount() );
+				updateResultsTable();
+			}
+		});
+		
+		increaseBet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				poker.addToBet(+1);
+				betAmountLabel.setText("Bet " + poker.getBetAmount() );
+				updateResultsTable();
+			}
+		});
+		
+		betMaxButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				poker.betMax();
+				betAmountLabel.setText("Bet " + poker.getBetAmount() );
+				updateResultsTable();
+			}
+		});
+		
 	}
 	
 	private void resetHeldCards()
@@ -302,4 +363,19 @@ public class WindowGUI {
 		for(int i = 0;i<heldCards.length;i++)
 			heldLabels[i].setForeground(SystemColor.inactiveCaption);
 	}
+	
+	private void updateResultsTable()
+	{
+		table.getModel().setValueAt(poker.getBetAmount() * 250, 0, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 50, 1, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 25, 2, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 9, 3, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 6, 4, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 4, 5, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 3, 6, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 2, 7, 1);
+		table.getModel().setValueAt(poker.getBetAmount() * 1, 8, 1);
+	}
+	
+
 }

@@ -23,7 +23,7 @@ public class Hand {
 
 		int[] ranks = new int[14];
 		int[] orderedRanks = new int[5];	 //miscellaneous cards that are not otherwise significant
-		boolean flush=true, straight=false;
+		boolean flush=true, straight=false, royal = false;
 		int sameCards=1,sameCards2=1;
 		int largeGroupRank=0,smallGroupRank=0;
 		int index=0;
@@ -86,7 +86,6 @@ public class Hand {
 			}
 		}
 		
-		
 
 		
 		for (int x=1; x<=9; x++) //can't have straight with lowest value of more than 10
@@ -99,9 +98,9 @@ public class Hand {
 			}
 		}
 
-		if (ranks[10]==1 && ranks[11]==1 && ranks[12]==1 && ranks[13]==1 && ranks[1]==1) //ace high
+		if (ranks[10]==1 && ranks[11]==1 && ranks[12]==1 && ranks[9]==1 && ranks[0]==1) //ace high
 		{
-			straight=true;
+			royal=true;
 			topStraightValue=14; //higher than king
 		}
 		
@@ -181,6 +180,9 @@ public class Hand {
 			value[0]=9;
 			value[1]=topStraightValue;
 		}
+		
+		if(royal)
+			value[0] = 10;
 
 	}
 	
@@ -191,31 +193,34 @@ public class Hand {
 		{
 
 			case 1:
-				s="high card";
+				s="High Card";
 				break;
 			case 2:
-				s="pair of " + Card.rankAsString(value[1]) + "\'s";
+				s="Pair of " + Card.rankAsString(value[1]) + "\'s";
 				break;
 			case 3:
-				s="two pair " + Card.rankAsString(value[1]) + " " + Card.rankAsString(value[2]);
+				s="Two Pair: " + Card.rankAsString(value[1]) + " and " + Card.rankAsString(value[2]);
 				break;
 			case 4:
-				s="three of a kind " + Card.rankAsString(value[1]) + "\'s";
+				s="Three of a Kind " + Card.rankAsString(value[1]) + "\'s";
 				break;
 			case 5:
 				s=Card.rankAsString(value[1]) + " high straight";
 				break;
 			case 6:
-				s="flush";
+				s="Flush";
 				break;
 			case 7:
-				s="full house " + Card.rankAsString(value[1]) + " over " + Card.rankAsString(value[2]);
+				s="Full House " + Card.rankAsString(value[1]) + " over " + Card.rankAsString(value[2]);
 				break;
 			case 8:
-				s="four of a kind " + Card.rankAsString(value[1]);
+				s="Four of a Kind " + Card.rankAsString(value[1]);
 				break;
 			case 9:
 				s="straight flush " + Card.rankAsString(value[1]) + " high";
+				break;
+			case 10:
+				s="Royal Flush Baby!!!";
 				break;
 			default:
 				s="error in Hand.display: value[0] contains invalid value";
@@ -224,6 +229,8 @@ public class Hand {
 		s = "				" + s;
 		System.out.println(s);
 	}
+	
+	
 
 	void displayAll()
 	{
@@ -264,6 +271,11 @@ public class Hand {
 	public void resetDeck()
 	{
 		deck.resetCards();
+	}
+	
+	public int[] getValue()
+	{
+		return value;
 	}
 }
 
